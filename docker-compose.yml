@@ -1,0 +1,33 @@
+version: '3'
+services:
+ app:
+  container_name: app
+  build: .
+  volumes:
+    - ./laravel:/var/www/html/todos
+  ports:
+    - '8000:8000'
+  tty: true
+  depends_on: 
+    - database
+  networks:
+    - app-postgre-net
+ database:
+  container_name: database
+  image: postgres:11-alpine
+  restart: always
+  environment:
+   POSTGRES_USER: postgres
+   POSTGRES_DB: postgres
+   POSTGRES_PASSWORD: secret
+  volumes:
+   - ./postgresql:/var/lib/postgresql/data
+  ports:
+   - '5432:5432'
+  tty: true
+  networks:
+   - app-postgre-net
+
+networks:
+  app-postgre-net:
+    driver: bridge
